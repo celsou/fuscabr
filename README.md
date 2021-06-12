@@ -1,4 +1,5 @@
-# FUScaBR - "Funções Úteis para o ScadaBR"
+![FuscaBR](https://user-images.githubusercontent.com/82009729/121762159-9253a980-cb0a-11eb-8230-c8d1a3fb874e.png)
+
 
 ## What is FUScaBR?
 FUScaBR is a Javascript library created to add resources to ScadaBR, such as, for example, the ability to align elements in the Graphic View. You can consider FUScaBR as an add-on for ScadaBR.
