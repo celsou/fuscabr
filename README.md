@@ -1,6 +1,8 @@
 ![FuscaBR](https://user-images.githubusercontent.com/82009729/121762159-9253a980-cb0a-11eb-8230-c8d1a3fb874e.png)
 
 
+Fala português? Leia o [README traduzido](README_pt.md)
+
 ## What is FUScaBR?
 FUScaBR is a Javascript library created to add resources to ScadaBR, such as, for example, the ability to align elements in the Graphic View. You can consider FUScaBR as an add-on for ScadaBR.
 
@@ -16,7 +18,7 @@ The current version of FUScaBR is based on modules. Each module adds specific fu
 - Download the [latest release](https://github.com/celsou/fuscabr/releases/latest/).
 - Extract the `FUScaBR.zip` file
 - Copy the `fuscabr` folder into the `resources/` folder in your ScadaBR installation.
-- In your ScadaBR installation, edit the file `WEB-INF/tags/page.tag` and add a script tag with the content `<script src="resources/fuscabr/fuscabr.js"></script>`
+- In your ScadaBR installation, edit the file `WEB-INF/tags/page.tag` and add a script tag with the content `<script src="resources/fuscabr/fuscabr.js" async></script>`
 - Clear your browser's cache
 
 ## Internationalization
