@@ -1,6 +1,6 @@
 /******************************************
  * FUScaBR - "Funções úteis para o ScadaBR"
- * Version 2.0 - License: MIT
+ * License: MIT
  ******************************************/
 "use strict";
 

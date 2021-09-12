@@ -1,8 +1,8 @@
 {
-		"language": "en",
-		"languageFile": "resources/fuscabr/conf/i18n/en.json",
+		"language": "pt",
+		"languageFile": "resources/fuscabr/conf/i18n/pt.json",
 		
-		"modulesPath": "resources/fuscabr/modules/minified/",
+		"modulesPath": "resources/fuscabr/modules/",
 		"modules": [
 			{ 
 				"name": "align",
@@ -15,6 +15,12 @@
 				"enabled": true,
 				"file": "chart.js",
 				"pages": [ "views.shtm", "view_edit.shtm", "public_view.htm" ]
+			},
+			{ 
+				"name": "ceditor",
+				"enabled": true,
+				"file": "ceditor.js",
+				"pages": [ "sql.shtm" ]
 			},
 			{
 				"name": "calendar",

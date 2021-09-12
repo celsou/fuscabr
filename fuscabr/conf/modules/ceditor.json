@@ -1,0 +1,13 @@
+{
+    "baseFolder": "resources/fuscabr/lib/codemirror/",
+
+    "themesFolder": "resources/fuscabr/lib/codemirror/theme/",
+    "theme": "default.css",
+    
+    "modesFolder": "resources/fuscabr/lib/codemirror/mode/",
+
+    "editorSize": {
+        "emport.shtm": { "height": 200, "width": 200 },
+        "sql.shtm": { "height": 200, "width": 200 }
+    }
+}
