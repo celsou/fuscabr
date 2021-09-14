@@ -2,12 +2,29 @@
     "baseFolder": "resources/fuscabr/lib/codemirror/",
 
     "themesFolder": "resources/fuscabr/lib/codemirror/theme/",
-    "theme": "default.css",
+    "theme": "codemirror.css",
     
     "modesFolder": "resources/fuscabr/lib/codemirror/mode/",
 
     "editorSize": {
-        "emport.shtm": { "height": 200, "width": 200 },
-        "sql.shtm": { "height": 200, "width": 200 }
-    }
+        "default": { "height": 150, "width": 250 },
+
+        "emport.shtm": { "height": 576, "width": 870 },
+        "sql.shtm": { "height": 128, "width": 593 },
+        "point_links.shtm": { "height": 156, "width": 383 },
+        "compound_events.shtm": {"height": 156, "width": 453 },
+        "scripting.shtm": { "height": 250, "width": 383},
+        "view_edit.shtm": { "height": 200, "width": 385},
+        
+        "meta_ds": { "height": 156, "width": 383 },
+        "httpimage_ds": { "height": 156, "width": 292},
+        "sql_ds_1": { "height": 156, "width": 348},
+        "sql_ds_2": { "height": 156, "width": 278}
+    },
+
+    "editorBorderColor": "#BFBFBF",
+
+    "watchdogInterval": 50,
+
+    "editorFontSize": "11px"
 }

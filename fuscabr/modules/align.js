@@ -11,9 +11,9 @@ fuscabr.align = {
 
 
 
-/* 
- *	User interface methods
- */	 
+	/* 
+	*	User interface methods
+	*/	 
 
 
 
@@ -46,9 +46,9 @@ fuscabr.align = {
 
 
 
-/*
- *	Responsivity methods
- */
+	/*
+	*	Responsivity methods
+	*/
 
 
 
@@ -92,45 +92,45 @@ fuscabr.align = {
 	},
 
 	// Create keyboard shortcuts for alignments
-	alignKeyboardShortcuts: function() {
-		if (event.code == "KeyA") {
+	alignKeyboardShortcuts: function(evt) {
+		if (evt.code == "KeyA") {
 			fuscabr.align.alignLeft();
-		} else if (event.code == "KeyD") {
+		} else if (evt.code == "KeyD") {
 			fuscabr.align.alignRight();
-		} else if (event.code == "KeyW") {
+		} else if (evt.code == "KeyW") {
 			fuscabr.align.alignTop();
-		} else if (event.code == "KeyX") {
+		} else if (evt.code == "KeyX") {
 			fuscabr.align.alignBottom();
-		} else if (event.code == "KeyF") {
+		} else if (evt.code == "KeyF") {
 			fuscabr.align.centerHorizontal();
-		} else if (event.code == "KeyG") {
+		} else if (evt.code == "KeyG") {
 			fuscabr.align.centerVertical();
-		} else if (event.code == "KeyR") {
+		} else if (evt.code == "KeyR") {
 			fuscabr.align.distributeHorizontal();
-		} else if (event.code == "KeyT") {
+		} else if (evt.code == "KeyT") {
 			fuscabr.align.distributeVertical();
-		} else if (event.code == "Escape") {
+		} else if (evt.code == "Escape") {
 			fuscabr.align.stop();
-		} else if (event.code == "KeyS") {
+		} else if (evt.code == "KeyS") {
 			fuscabr.align.restart();
 		}
 	},
 	
 	// Create keyboard shortcuts for anchor moving
-	moveKeyboardShortcuts: function(e) {
+	moveKeyboardShortcuts: function(evt) {
 		var offset = fuscabr.align.conf.moveAnchorOffset;
-		if (event.code == "ArrowUp") {
-			e.preventDefault();
+		if (evt.code == "ArrowUp") {
+			evt.preventDefault();
 			fuscabr.align.relativeMoveAnchor(0, -(offset));
-		} else if (event.code == "ArrowDown") {
+		} else if (evt.code == "ArrowDown") {
 			fuscabr.align.relativeMoveAnchor(0, +(offset));
-			event.preventDefault();
-		} else if (event.code == "ArrowLeft") {
+			evt.preventDefault();
+		} else if (evt.code == "ArrowLeft") {
 			fuscabr.align.relativeMoveAnchor(-(offset), 0);
-			event.preventDefault();
-		} else if (event.code == "ArrowRight") {
+			evt.preventDefault();
+		} else if (evt.code == "ArrowRight") {
 			fuscabr.align.relativeMoveAnchor(+(offset), 0);
-			event.preventDefault();
+			evt.preventDefault();
 		}
 	},
 
@@ -189,9 +189,9 @@ fuscabr.align = {
 
 
 
-/*
- *	Align/move methods
- */
+	/*
+	*	Align/move methods
+	*/
  
  
  
@@ -425,9 +425,9 @@ fuscabr.align = {
 
 
 	
-/*
- *  Main methods
- */
+	/*
+	*  Main methods
+	*/
 
 
 

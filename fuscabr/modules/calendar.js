@@ -9,7 +9,6 @@ fuscabr.calendar = {
         if (this.shouldCreateCalendars()) {
        		if (typeof flatpickr == "undefined") {
                 this.loadFlatpickr();
-                console.log("aife");
             } else {
                 this.localizeFlatpickr();
                 this.createCalendars();
