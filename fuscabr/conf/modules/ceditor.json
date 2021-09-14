@@ -5,6 +5,7 @@
     "theme": "codemirror.css",
     
     "modesFolder": "resources/fuscabr/lib/codemirror/mode/",
+    "addonsFolder": "resources/fuscabr/lib/codemirror/addon/",
 
     "editorSize": {
         "default": { "height": 150, "width": 250 },

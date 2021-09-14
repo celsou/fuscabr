@@ -3,7 +3,7 @@
  * License: MIT
  ******************************************/
  "use strict";
- 
+
  fuscabr.ceditor = {
 	createdEditors: [],
 	watchdog: null,
@@ -44,33 +44,48 @@
 		this.loadDependency(conf.baseFolder + "codemirror.min.js", "script", fuscabr.ceditor.start);
 	},
 
-	// Load all CodeMirror dependencies for the given language 
+	// Load all CodeMirror dependencies for the given language
 	loadLanguage: function(language, callback) {
 		var modesFolder = this.conf.modesFolder;
+		var addonsFolder = this.conf.addonsFolder;
 		var scriptSrc = [];
 
 		// Define the files needed to each programming language mode
 		if (language == "html") {
+			// Addons
+			scriptSrc.push(addonsFolder + "fold/xml-fold.js");
+			scriptSrc.push(addonsFolder + "edit/closebrackets.js");
+			scriptSrc.push(addonsFolder + "edit/closetag.js");
+			scriptSrc.push(addonsFolder + "edit/matchbrackets.js");
+			// Languages
 			scriptSrc.push(modesFolder + "xml/xml.js");
 			scriptSrc.push(modesFolder + "javascript/javascript.js");
 			scriptSrc.push(modesFolder + "css/css.js");
 			scriptSrc.push(modesFolder + "htmlmixed/htmlmixed.js");
-		} else if (language == "javascript" || language == "json") {
+		} else if (language == "javascript" || language == "json") {		
+			// Addons
+			scriptSrc.push(addonsFolder + "edit/closebrackets.js");
+			scriptSrc.push(addonsFolder + "edit/matchbrackets.js");
+			// Languages
 			scriptSrc.push(modesFolder + "javascript/javascript.js");
-		} else if (language == "sql") {
+		} else if (language == "sql") {			
+			// Addons
+			scriptSrc.push(addonsFolder + "edit/closebrackets.js");
+			scriptSrc.push(addonsFolder + "edit/matchbrackets.js");
+			// Languages
 			scriptSrc.push(modesFolder + "sql/sql.js");
 		}
 
-		// Load the files (if not already loaded) 
+		// Load the files (if not already loaded)
 		for (var i = 0; i < scriptSrc.length; i++) {
 			if (!document.querySelector("#fuscabr-modules script[src*='" + scriptSrc[i] + "']")) {
 				if (i == (scriptSrc.length - 1))
 					this.loadDependency(scriptSrc[i], "script", callback);
-				else 
+				else
 					this.loadDependency(scriptSrc[i], "script");
 			} else if (i == (scriptSrc.length - 1)) {
 				setTimeout(callback, 200);
-			}		
+			}
 		}
 	},
 
@@ -78,17 +93,17 @@
 
 	/*
 	* Runtime methods
-	*/	
+	*/
 
 
 
-	// Update all editors with the respective textareas content 
+	// Update all editors with the respective textareas content
 	updateEditors: function() {
 		for (var cm of fuscabr.ceditor.createdEditors)
 			cm.setValue(cm.getTextArea().value);
 	},
 
-	// Update all textareas with the respective editors content 
+	// Update all textareas with the respective editors content
 	updateTextAreas: function() {
 		for (var cm of fuscabr.ceditor.createdEditors)
 			cm.save();
@@ -98,11 +113,11 @@
 	generalWatchdog: function(targetElement) {
 		var element = document.querySelector(targetElement);
 		this.watchdog = element.value;
-		
+
 		// Detect if the value of the given <input> has changed
 		setInterval(function() {
 			if (fuscabr.ceditor.watchdog != document.querySelector(targetElement).value) {
-				fuscabr.ceditor.watchdog = document.querySelector(targetElement).value;	
+				fuscabr.ceditor.watchdog = document.querySelector(targetElement).value;
 				fuscabr.ceditor.updateEditors();
 			}
 		}, this.conf.watchdogInterval);
@@ -111,7 +126,7 @@
 	// Watchdog to update editors (used in Import/Export page)
 	emportWatchdog: function(targetElement) {
 		var element = document.querySelector(targetElement);
-		
+
 		// Detect if the element is enabled (input property "disabled")
 		var watchdogFunc = function() {
 			if (!element.disabled) {
@@ -119,14 +134,14 @@
 				clearInterval(fuscabr.ceditor.watchdog);
 			}
 		}
-		
+
 		this.watchdog = setInterval(watchdogFunc, this.conf.watchdogInterval);
 	},
 
 	// Watchdog to update editors (used in View Edit page)
 	viewEditWatchdog: function(targetElement) {
 		var element = document.querySelector(targetElement);
-		
+
 		// Detect if the element is hiden (CSS property "display")
 		var watchdogFunc = function() {
 			if (element.style.display != "none") {
@@ -147,17 +162,23 @@
 
 
 	// Create a new CodeMirror editor instance
-	createEditor: function(textAreaSelector, mode, pageRef) {		
+	createEditor: function(textAreaSelector, mode, pageRef) {
 		var textArea = document.querySelector(textAreaSelector);
-		var editorConf = { lineNumbers: true };
-		
+		var editorConf = { lineNumbers: true, indentUnit: 4 };
+
 		// Define editor's theme
 		if (this.conf.theme != "default" && this.conf.theme != "codemirror.css")
 			editorConf.theme = this.conf.theme.replace(".css", "");
 
+		// General Addons
+		editorConf.autoCloseBrackets = true;
+		editorConf.matchBrackets = true;
+
 		// Define editor's programming language
 		if (mode == "html" || mode == "htmlmixed") {
 			editorConf.mode = "htmlmixed";
+			// Addons
+			editorConf.autoCloseTags = true;
 		} else if (mode == "javascript" || mode == "json") {
 			editorConf.mode = { name: "javascript" };
 			editorConf.mode.json = (mode == "json") ? true : false;
@@ -166,7 +187,7 @@
 		}
 
 		var cm = CodeMirror.fromTextArea(textArea, editorConf);
-		
+
 		// Define editor's size
 		var size = this.conf.editorSize;
 		if (size[pageRef])
@@ -177,14 +198,14 @@
 
 		this.createdEditors.push(cm);
 	},
-	
+
 	// Create event listeners
 	createListener: function(selector, eventType, funcObj, catchParent) {
 		var element = document.querySelector(selector);
 
 		if (catchParent)
 			element = element.parentElement;
-		
+
 		if (element)
 			element.addEventListener(eventType, funcObj, true);
 	},
@@ -206,7 +227,7 @@
 
 		if (pageUrl.includes("sql.shtm")) {
 			// SQL page
-			
+
 			// Editor
 			ceditor.loadLanguage("sql", function(){
 				ceditor.createEditor("#sqlString", "sql", "sql.shtm");
@@ -214,7 +235,7 @@
 
 		} else if (pageUrl.includes("emport.shtm")) {
 			// Import/Export page
-			
+
 			// Editor
 			ceditor.loadLanguage("json", function() {
 				ceditor.createEditor("#emportData", "json", "emport.shtm");
@@ -227,7 +248,7 @@
 
 		} else if (pageUrl.includes("point_links.shtm")) {
 			// Point link page
-			
+
 			// Editor
 			ceditor.loadLanguage("javascript", function() {
 				ceditor.createEditor("#script", "javascript", "point_links.shtm");
@@ -240,7 +261,7 @@
 
 		}  else if (pageUrl.includes("compound_events.shtm")) {
 			// Compound events page
-			
+
 			// Editor
 			ceditor.loadLanguage("javascript", function() {
 				ceditor.createEditor("#condition", "javascript", "compound_events.shtm");
@@ -257,7 +278,7 @@
 
 		} else if (pageUrl.includes("scripting.shtm")) {
 			// Scripting page
-			
+
 			// Editor
 			ceditor.loadLanguage("javascript", function() {
 				ceditor.createEditor("#script", "javascript", "scripting.shtm");
@@ -270,11 +291,11 @@
 
 		} else if (pageUrl.includes("view_edit.shtm")) {
 			// Graphic View Edit page
-			
+
 			// Editors
 			ceditor.loadLanguage("javascript", function() {
 				ceditor.createEditor("#graphicRendererScriptScript", "javascript", "view_edit.shtm");
-			});			
+			});
 			ceditor.loadLanguage("html", function() {
 				ceditor.createEditor("#staticPointContent", "html", "view_edit.shtm");
 			});
@@ -299,7 +320,7 @@
 			// Data sources
 			if (document.getElementById("webcamLiveFeedCode")) {
 				// HTTP Image data source
-				
+
 				// Editor
 				ceditor.loadLanguage("html", function() {
 					ceditor.createEditor("#webcamLiveFeedCode", "html", "httpimage_ds");
@@ -311,7 +332,7 @@
 
 			} else if (document.getElementById("script")) {
 				// Meta data source
-				
+
 				//Editor
 				ceditor.loadLanguage("javascript", function() {
 					ceditor.createEditor("#script", "javascript", "meta_ds");
@@ -324,7 +345,7 @@
 
 			} else if (document.getElementById("selectStatement")) {
 				// SQL data source
-				
+
 				// Editors
 				ceditor.loadLanguage("sql", function() {
 					ceditor.createEditor("#selectStatement", "sql", "sql_ds_1");
