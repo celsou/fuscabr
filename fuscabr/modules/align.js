@@ -10,6 +10,13 @@ fuscabr.align = {
 	currentAnchorPosition: {},
 	elementsFollowAnchor: false,
 	
+
+	/**
+	 *	Interface-related methods
+	 */
+
+
+	// Create the Graphical User Interface (GUI) for alignments
 	createInterface: function() {	
 		if(!document.getElementById("fuscabr-align")) {
 			var gui = document.createElement("div");
@@ -24,6 +31,7 @@ fuscabr.align = {
 		}
 	},
 
+	// Show (or hide) alignment GUI
 	showInterface: function(show) {
 		if (show) {
 			document.getElementById("fuscabr-align-start-stop").value = fuscabr.common.i18n.align["stop_alignment"];
@@ -36,6 +44,7 @@ fuscabr.align = {
 		}
 	},
 
+	// Localize the alignment GUI
 	localizeInterface: function() {
 		var localizable = document.querySelectorAll("#fuscabr-align *[data-i18n]");
 		for (var i of localizable) {
@@ -45,10 +54,28 @@ fuscabr.align = {
 		}
 	},
 
+	// Prevent View elements from being deleted while alignment mode is active
+	preventDeleteElements: function(enable) {
+		if (enable) {
+			this.deleteViewComponentBackup = deleteViewComponent;
+			deleteViewComponent = function() {
+				alert(fuscabr.common.i18n.align["cannot_delete_components"]);
+			}
+		} else {
+			deleteViewComponent = this.deleteViewComponentBackup;
+			this.deleteViewComponentBackup = null;
+		}
+	},
 
+
+	/**
+	 *	"Selection Mode" related methods
+	 */
 
 
 	startSelectionMode: function() {
+		// This trigger updates selectable elements after add
+		// new elements to the Graphical View
 		if (!document.getElementById("fuscabr-update-trigger")) {
 			var updateTrigger = document.querySelector("img[onclick='addViewComponent()']");
 			updateTrigger.addEventListener("click", fuscabr.align.updateSelectionMode);
@@ -70,6 +97,7 @@ fuscabr.align = {
 	},
 
 	stopSelectionMode: function() {	
+		// Remove update trigger
 		var updateTrigger = document.getElementById("fuscabr-update-trigger");
 		updateTrigger.removeEventListener("click", fuscabr.align.updateSelectionMode);
 		updateTrigger.id = "";
@@ -94,14 +122,13 @@ fuscabr.align = {
 		this.selectedItems = [];
 	},
 
-	
 	updateSelectionMode: function() {
 		setTimeout(function() {
 			fuscabr.align.startSelectionMode.call(fuscabr.align);
 		}, 200);
 	},
 
-
+	// Enable or disable responsiveness to mouse clicks or hovering
 	hoverResponsivity: function(element, enable) {
 		if (enable) {
 			element.addEventListener("mouseover", fuscabr.align.drawHoverBorder);
@@ -117,13 +144,11 @@ fuscabr.align = {
 		}
 	},
 
-
 	drawHoverBorder: function() {
 		var conf = fuscabr.align.conf;
 		this.style.margin = "-2px";
 		this.style.border = "2px solid " + conf.hoverBorderColor;
 	},
-
 
 	clearHoverBorder: function() {
 		this.style.margin = "";
@@ -131,6 +156,16 @@ fuscabr.align = {
 	},
 
 
+	/**
+	 *	Element selection and anchor-related methods
+	 *
+	 *	In FUScaBR Align module, the "anchor element" is always
+	 *	the first selected element. This element is used as a
+	 *	reference to alignment methods (except for "distribution").
+	 */
+
+
+	// Select elements that can be aligned
 	selectItem: function() {
 		fuscabr.align.selectedItems.push(this);
 
@@ -185,19 +220,6 @@ fuscabr.align = {
 		document.getElementById("fuscabr-align-y-anchor").value = "";
 	},	
 
-
-	preventDeleteElements: function(enable) {
-		if (enable) {
-			this.deleteViewComponentBackup = deleteViewComponent;
-			deleteViewComponent = function() {
-				alert(fuscabr.common.i18n.align["cannot_delete_components"]);
-			}
-		} else {
-			deleteViewComponent = this.deleteViewComponentBackup;
-			this.deleteViewComponentBackup = null;
-		}
-	},
-
 	enableAnchorFollowing: function(enable) {
 		if (enable) {
 			this.elementsFollowAnchor = true;
@@ -207,6 +229,43 @@ fuscabr.align = {
 		}
 	},
 
+	// Get current position of anchor element
+	getAnchorPosition: function() {
+		// Get anchor's CSS position
+		var xPos = fuscabr.align.selectedItems[0].style.left.replace("px", "");
+		var yPos = fuscabr.align.selectedItems[0].style.top.replace("px", "");
+		
+		return {x: xPos, y: yPos};
+	},
+
+	// Update current position of anchor element
+	updateAnchorPosition: function() {
+		// Get anchor's CSS position
+		var pos = fuscabr.align.getAnchorPosition();
+		
+		if (fuscabr.align.currentAnchorPosition != {})
+			fuscabr.align.lastAnchorPosition = fuscabr.align.currentAnchorPosition;
+
+		fuscabr.align.currentAnchorPosition = pos;
+
+		// Update GUI position values
+		document.getElementById("fuscabr-align-x-anchor").value = pos.x;
+		document.getElementById("fuscabr-align-y-anchor").value = pos.y;
+
+		updateViewComponentLocation(fuscabr.align.selectedItems[0].id);
+
+		if (fuscabr.align.elementsFollowAnchor) {
+			fuscabr.align.followAnchor();
+		}
+	},
+
+
+	/**
+	 *	Keyboard shortcut methods
+	 */
+
+
+	// Enable/disable shortcuts to move the anchor
 	enableMovingShortcuts: function(enable) {
 		if (enable) {
 			window.addEventListener("keydown", fuscabr.align.moveKeyboardShortcuts);
@@ -216,6 +275,7 @@ fuscabr.align = {
 		}
 	},
 
+	// Enable/disable shortcuts to align elements
 	enableAlignShortcuts: function(enable) {
 		if (enable)
 			document.body.addEventListener("keyup", fuscabr.align.alignKeyboardShortcuts);
@@ -223,7 +283,7 @@ fuscabr.align = {
 			document.body.removeEventListener("keyup", fuscabr.align.alignKeyboardShortcuts);
 	},
 
-
+	// Define keyboard shortcuts to alignment functions
 	alignKeyboardShortcuts: function(evt) {
 		if (evt.code == "KeyA") {
 			fuscabr.align.alignLeft();
@@ -248,6 +308,7 @@ fuscabr.align = {
 		}
 	},
 	
+	// Define shortcuts to use keyboard arrows in anchor moving
 	moveKeyboardShortcuts: function(evt) {
 		var offset = fuscabr.align.conf.moveAnchorOffset;
 		if (evt.code == "ArrowUp") {
@@ -265,37 +326,13 @@ fuscabr.align = {
 		}
 	},
  
+
+	/**
+	 *	Moving/align methods
+	 */
  
- 
 
-	getAnchorPosition: function() {
-		// Get anchor's CSS position
-		var xPos = fuscabr.align.selectedItems[0].style.left.replace("px", "");
-		var yPos = fuscabr.align.selectedItems[0].style.top.replace("px", "");
-		
-		return {x: xPos, y: yPos};
-	},
-
-	updateAnchorPosition: function() {
-		// Get anchor's CSS position
-		var pos = fuscabr.align.getAnchorPosition();
-		
-		if (fuscabr.align.currentAnchorPosition != {})
-			fuscabr.align.lastAnchorPosition = fuscabr.align.currentAnchorPosition;
-
-		fuscabr.align.currentAnchorPosition = pos;
-
-		// Update GUI position values
-		document.getElementById("fuscabr-align-x-anchor").value = pos.x;
-		document.getElementById("fuscabr-align-y-anchor").value = pos.y;
-
-		updateViewComponentLocation(fuscabr.align.selectedItems[0].id);
-
-		if (fuscabr.align.elementsFollowAnchor) {
-			fuscabr.align.followAnchor();
-		}
-	},
-
+	// Move all selected elements to follow anchor displacement
 	followAnchor: function() {
 		var cap = this.currentAnchorPosition;
 		var lap = this.lastAnchorPosition;
@@ -317,7 +354,7 @@ fuscabr.align = {
 
 	},
 
-
+	// Move anchor to an absolute coordinate (called from GUI)
 	absoluteMoveAnchor: function() {
 		// Get position specified in GUI
 		var xPos = document.getElementById("fuscabr-align-x-anchor").value;
@@ -330,20 +367,18 @@ fuscabr.align = {
 		fuscabr.align.updateAnchorPosition();
 	},
 
-	
+	// Move anchor relatively (called from keyboard arrows shortcut)
 	relativeMoveAnchor: function(xOffset, yOffset) {
 		// Get actual position
 		var pos = fuscabr.align.getAnchorPosition();
 		
 		// Calc the offset and move anchor
 		if (xOffset) {
-			var newX = pos.y;
-			newX = pos.x - (pos.x % xOffset) + xOffset;
+			var newX = pos.x - (pos.x % xOffset) + xOffset;
 			fuscabr.align.selectedItems[0].style.left = Math.round(newX) + "px";
 		}
 		if (yOffset) {
-			var newY = pos.y;
-			newY = pos.y - (pos.y % yOffset) + yOffset;
+			var newY = pos.y - (pos.y % yOffset) + yOffset;
 			fuscabr.align.selectedItems[0].style.top = Math.round(newY) + "px";
 		}
 		
@@ -555,6 +590,13 @@ fuscabr.align = {
 		}
 	},
 
+
+	/**
+	 *	Main methods
+	 */
+
+
+	// Start alignment
 	start: function() {
 		this.startSelectionMode();
 		this.enableAlignShortcuts(true);
@@ -562,6 +604,7 @@ fuscabr.align = {
 		this.showInterface(true);
 	},
 
+	// Stop alignment
 	stop: function() {
 		this.stopSelectionMode();
 		this.enableAlignShortcuts(false);
@@ -576,7 +619,6 @@ fuscabr.align = {
 		this.stopSelectionMode();
 		this.startSelectionMode();
 	},
-
 
 	// Get module settings
 	getSettings: function() {

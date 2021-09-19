@@ -10,7 +10,7 @@ fuscabr.fixes = {
 		var btnDelete = document.querySelector("input[name='delete']");
 		btnDelete.type = "button";
 		btnDelete.name = "delete-disabled";
-		btnDelete.addEventListener("click", fuscabr.advanced.deleteView);
+		btnDelete.addEventListener("click", fuscabr.fixes.deleteView);
 	},
 
 	// Delete the Graphical View after confirmation 
@@ -29,7 +29,7 @@ fuscabr.fixes = {
 	// Change ScadaBR's "positionEditor()" function 
 	changePositionEditor: function() {
 		var positionEditor_backup = positionEditor;
-		var positionEditor = this.positionEditor;
+		positionEditor = this.positionEditor;
 	},
 
 	// Alternative function for the standard "positionEditor()"

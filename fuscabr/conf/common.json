@@ -2,9 +2,9 @@
 		"language": "en",
 		"languageFile": "resources/fuscabr/conf/i18n/en.json",
 		
-		"modulesPath": "resources/fuscabr/modules/",
+		"modulesPath": "resources/fuscabr/modules/minified/",
 		"modules": [
-			{ 
+			{
 				"name": "align",
 				"enabled": true,
 				"file": "align.js",
@@ -16,7 +16,7 @@
 				"file": "chart.js",
 				"pages": [ "views.shtm", "view_edit.shtm", "public_view.htm" ]
 			},
-			{ 
+			{
 				"name": "ceditor",
 				"enabled": true,
 				"file": "ceditor.js",
