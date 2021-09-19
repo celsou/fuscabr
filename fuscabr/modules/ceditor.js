@@ -302,6 +302,8 @@
 			// Listeners
 			ceditor.createListener("#graphicRendererScriptScript", "change", ceditor.updateEditors);
 			ceditor.createListener("#staticPointContent", "change", ceditor.updateEditors);
+			ceditor.createListener("#graphicRendererEditorPopup .fuscabr-csnippet-apply", "click", ceditor.updateEditors);
+			ceditor.createListener("#htmlEditor .fuscabr-csnippet-apply", "click", ceditor.updateEditors);
 			ceditor.createListener("img[onclick*='staticEditor.save()']", "click", ceditor.updateTextAreas, true);
 			ceditor.createListener("img[onclick*='graphicRendererEditor.save()']", "click", ceditor.updateTextAreas, true);
 			// Re-asign functions, adding the watchdog

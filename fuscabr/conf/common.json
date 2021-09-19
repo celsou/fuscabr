@@ -1,6 +1,6 @@
 {
-		"language": "pt",
-		"languageFile": "resources/fuscabr/conf/i18n/pt.json",
+		"language": "en",
+		"languageFile": "resources/fuscabr/conf/i18n/en.json",
 		
 		"modulesPath": "resources/fuscabr/modules/",
 		"modules": [

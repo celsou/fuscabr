@@ -9,6 +9,7 @@
         { "file": "clock.html", "i18n": "clock", "desc": "Digital clock" },
         { "file": "fullScreen.html", "i18n": "full_screen", "desc": "Toggle Full Screen" },
         { "file": "HTMLImage.html", "i18n": "html_image", "desc": "HTML image" },
+        { "file": "logout.html", "i18n": "button_logout", "desc": "Logout button" },
         { "file": "runMultipleScripts.html", "i18n": "run_multiple_scripts", "desc": "Run multiple ScadaBR scripts" },
         { "file": "silenceAlarms.html", "i18n": "silence_alarms", "desc": "Silence alarms button" },
         { "file": "simpleText.html", "i18n": "simple_text", "desc": "Simple text example" }
