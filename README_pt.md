@@ -16,7 +16,7 @@ A versão atual da FUScaBR é baseada em módulos. Cada módulo adiciona uma fun
 - Faça o download da [última versão](https://github.com/celsou/fuscabr/releases/latest/).
 - Extraia o arquivo `FUScaBR.zip`
 - Copie a pasta `fuscabr` para dentro da pasta `resources/`, na sua instalação do ScadaBR.
-- Em sua instalação do ScadaBR, edite o arquivo `WEB-INF/tags/page.tag` e adicione uma tag de script com o conteúdo: `<script src="resources/fuscabr/fuscabr.js" async></script>`
+- Em sua instalação do ScadaBR, edite o arquivo `WEB-INF/tags/page.tag` e adicione uma tag de script com o conteúdo: `<script src="resources/fuscabr/fuscabr.js" defer></script>`
 - Limpe o cache do seu navegador
 
 ## Internacionalização
