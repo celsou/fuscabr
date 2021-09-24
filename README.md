@@ -22,7 +22,7 @@ The current version of FUScaBR is based on modules. Each module adds specific fu
 - Clear your browser's cache
 
 ## Internationalization
-FUScaBR 2.0 has support for internationalization. Currently, there are translations only in Portuguese and English. You can check how to change the FUScaBR language (or create new translations) at [FUScaBR Wiki](https://github.com/celsou/fuscabr/wiki/FUScaBR-localization). Collaborators to translate FUScaBR into other languages are welcome.
+FUScaBR has support for internationalization. Currently, there are translations only in Portuguese and English. You can check how to change the FUScaBR language (or create new translations) at [FUScaBR Wiki](https://github.com/celsou/fuscabr/wiki/FUScaBR-localization). Collaborators to translate FUScaBR into other languages are welcome.
 
 ## Settings
 FUScaBR's settings are based on JSON files. These files are located inside `fuscabr/conf` folder and control the library in general as well as specific behaviors of the modules. You can get more information at [FUScaBR Wiki](https://github.com/celsou/fuscabr/wiki/FUScaBR-settings).
