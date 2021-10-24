@@ -7,7 +7,7 @@
  fuscabr.ceditor = {
 	createdEditors: [],
 	watchdog: null,
-
+	fileCounter: [0, 0],
 
 
 	/*
@@ -29,7 +29,7 @@
 		}
 
 		if (callback)
-			htmlTag.onload = callback;
+			htmlTag.addEventListener("load", callback);
 
 		document.getElementById("fuscabr-modules").appendChild(htmlTag);
 	},
@@ -76,19 +76,35 @@
 			scriptSrc.push(modesFolder + "sql/sql.js");
 		}
 
+			
 		// Load the files (if not already loaded)
+		var notLoadedScripts = [];
 		for (var i = 0; i < scriptSrc.length; i++) {
 			if (!document.querySelector("#fuscabr-modules script[src*='" + scriptSrc[i] + "']")) {
-				if (i == (scriptSrc.length - 1))
-					this.loadDependency(scriptSrc[i], "script", callback);
-				else
-					this.loadDependency(scriptSrc[i], "script");
-			} else if (i == (scriptSrc.length - 1)) {
-				setTimeout(callback, 200);
+				notLoadedScripts.push(scriptSrc[i]);
 			}
+		}
+		
+		if (notLoadedScripts.length) {
+			for (var i of notLoadedScripts) {
+				var index = fuscabr.ceditor.fileCounter[0] > 0 ? 1 : 0;
+				this.loadDependency(i, "script", function() {
+					fuscabr.ceditor.loadLanguageCb(notLoadedScripts.length, index, callback);
+				});
+			}
+		} else {
+			setTimeout(callback, 200);
 		}
 	},
 
+	loadLanguageCb: function(counter, index, callback) {
+		fuscabr.ceditor.fileCounter[index]++;
+		
+		if (counter == fuscabr.ceditor.fileCounter[index]) {
+			fuscabr.ceditor.fileCounter[index] = 0;
+			callback();
+		}		
+	},
 
 
 	/*
