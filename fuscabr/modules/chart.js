@@ -6,6 +6,8 @@
 
 fuscabr.chart = {
 	createdCharts: [],
+	fileCounter: 0,
+	loadedScripts: false,
 
 	// Main loop
 	loop: function() {
@@ -30,8 +32,8 @@ fuscabr.chart = {
 	// Create new charts
 	createNewCharts: function(element) {
 		// Load Chart.js if not present
-		if (typeof Chart == "undefined") {
-			this.loadChartJs();
+		if (typeof Chart == "undefined" || this.loadedScripts) {
+			this.loadChartJS();
 			return;
 		}
 
@@ -59,25 +61,29 @@ fuscabr.chart = {
 			data: conf.data
 		});
 		chart.options.elements.line.tension = 0;
+		chart.options.elements.line.fill = true;
 		chart.options.maintainAspectRatio = false;
 		
 		// Adjust chart parameters
+		if (conf.options && conf.options.indexAxis == "y") {
+			chart.options.indexAxis == "y";
+		}
 		if (conf.beginAtZero == true) {
-			chart.options.scales.yAxes[0].ticks.beginAtZero = true;
+			chart.options.scales.y.beginAtZero = true;
 		}
 		if (conf.animations == false) {
 			chart.options.animation.duration = 0;
 		}
 		if (conf.timeBased == true) {
-			chart.options.scales.xAxes[0].type = "time";
-			chart.options.scales.xAxes[0].time = timeOptions;
+			chart.options.scales.x.type = "time";
+			chart.options.scales.x.time = timeOptions;
 		} else {
-			chart.options.scales.xAxes[0].ticks.display = false;
-			chart.options.scales.xAxes[0].gridLines.drawTicks = false;
+			chart.options.scales.x.ticks.display = false;
+			chart.options.scales.x.grid.drawTicks = false;
 		}
 		if (conf.showTitle == true) {
-			chart.options.title.display = true;
-			chart.options.title.text = conf.title;
+			chart.options.plugins.title.display = true;
+			chart.options.plugins.title.text = conf.title;
 		}
 
 		if (this.conf.enableDatapointWarnings) {
@@ -110,8 +116,8 @@ fuscabr.chart = {
 		}
 
 		// Destroy chart if scale type changes (to recreate it later)
-		if (element.options.scales.xAxes[0]) {
-			var isTimeInChart = element.options.scales.xAxes[0].type == "time";
+		if (element.options.scales.x) {
+			var isTimeInChart = element.options.scales.x.type == "time";
 			var isTimeInConf = conf.timeBased;
 			if (isTimeInChart != isTimeInConf) {
 				fuscabr.chart.destroyChart(element);
@@ -120,7 +126,12 @@ fuscabr.chart = {
 		}
 		
 		// Destroy chart if more series are added
-		if (element.data.datasets.length != conf.data.datasets.length) {
+		if (element.data.datasets.length != conf.data.datasets.length) {			
+			fuscabr.chart.destroyChart(element);
+			return -1;
+		}
+
+		if (element.data.datasets[0].data.length > conf.data.datasets[0].data.length) {
 			fuscabr.chart.destroyChart(element);
 			return -1;
 		}
@@ -131,9 +142,9 @@ fuscabr.chart = {
 		
 		// Update chart parameters
 		var changed = false;
-		var foo = element.options.scales.yAxes[0].ticks.beginAtZero;
+		var foo = element.options.scales.y.beginAtZero;
 		if (foo != conf.beginAtZero) {
-			element.options.scales.yAxes[0].ticks.beginAtZero = conf.beginAtZero;
+			element.options.scales.y.beginAtZero = conf.beginAtZero;
 			changed = true;
 		}
 		foo = (element.options.animation.duration > 0);
@@ -141,10 +152,10 @@ fuscabr.chart = {
 			element.options.animation.duration = (conf.animations == true) ? 1000 : 0;
 			changed = true;
 		}
-		foo = element.options.title;
+		foo = element.options.plugins.title;
 		if (foo.display != conf.showTitle || foo.text != conf.title) {
-			element.options.title.display = conf.showTitle;
-			element.options.title.text = conf.title;
+			element.options.plugins.title.display = conf.showTitle;
+			element.options.plugins.title.text = conf.title;
 			changed = true;
 		}
 		
@@ -222,6 +233,15 @@ fuscabr.chart = {
 		var returnArr = [ {}, "" ];
 		returnArr[0] = dataObj;
 
+		// In Chart.js v3+, "horizontalBar" type was removed
+		if (returnArr[0].type == "horizontalBar") {
+			returnArr[0].type = "bar";
+			if (!returnArr[0].options)
+				returnArr[0].options = { indexAxis: "y" };
+			else
+				returnArr[0].options.indexAxis = "y";
+		}
+
 		for (var i in returnArr[0].data.datasets) {
 			var dataset = returnArr[0].data.datasets[i];
 
@@ -290,14 +310,31 @@ fuscabr.chart = {
 	},
 
 	// Load Chart.js script
-	loadChartJs: function() {
+	loadChartJS: function() {
 		if (!document.getElementById("fuscabr-chartjs")) {
-			var chartJs = document.createElement("script");
-        	chartJs.src = this.conf.chartJsFile;
-			chartJs.id = "fuscabr-chartjs";
-        	chartJs.onload = fuscabr.chart.loop;
+			var scripts = [];
+			var foo = fuscabr.chart.conf.baseFolder;
+			scripts.push(foo + "moment.min.js");		
+			scripts.push(foo + "chart.min.js");
+			scripts.push(foo + "chartjs-adapter-moment.min.js");
+			
+			for (var i of scripts) {
+				var script = document.createElement("script");
+				script.src = i;
+				script.addEventListener("load", function() {
+					fuscabr.chart.loadChartJSCallback(script.length);
+				});
+				document.getElementById("fuscabr-modules").appendChild(script);
+			}		
+		}
+	},
 
-        	document.getElementById("fuscabr-modules").appendChild(chartJs);
+	loadChartJSCallback: function(size) {
+		fuscabr.chart.fileCounter++;
+		if (fuscabr.chart.fileCounter == size) {
+			fuscabr.chart.loadedScripts = true;
+			fuscabr.chart.fileCounter = 0;
+			fuscabr.chart.loop.call(fuscabr.chart);
 		}
 	},
 

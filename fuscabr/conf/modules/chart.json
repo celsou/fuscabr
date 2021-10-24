@@ -1,9 +1,9 @@
 {
-    "chartJsFile": "resources/fuscabr/lib/Chart.bundle.min.js",
+    "baseFolder": "resources/fuscabr/lib/chartjs/",
     "fallbackBackgroundColor": "#2583E8B8",
     "fallbackBorderColor": "#2583E8B8",
     "enableDatapointWarnings": true,
-    "refreshTime": 250,
+    "refreshTime": 500,
 
     "timeOptions": {
         "tooltipFormat": "DD/MM/YYYY - HH:mm:ss",
