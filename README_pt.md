@@ -24,12 +24,5 @@ A FUScaBR tem suporte a internacionalização. Atualmente, existem traduções e
 ## Configurações
 As configurações da FUScaBR são baseadas em arquivos JSON. Esses arquivos estão localizados dentro da pasta `fuscabr/conf` e controlam tanto a biblioteca em geral como os comportamentos específicos dos módulos. Você pode obter mais informações na [Wiki da FUScaBR](https://github.com/celsou/fuscabr/wiki/FUScaBR-settings).
 
-## Ajude-nos com o dinheiro do café
-A FUScaBR está sendo útil para você? Você pode demonstrar seu agradecimento através de uma doação. Atualmente, estamos aceitando doações apenas através de Pix (sistema brasileiro de pagamentos). Os dados são os seguintes:
-
-Chave aleatória Pix: `848c0870-ec5a-488c-95eb-97e3e3c8e029`
-
-Obrigado!
-
 ## Licença
 A FUScaBR é distribuída sob a licença MIT.
