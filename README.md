@@ -26,12 +26,5 @@ FUScaBR has support for internationalization. Currently, there are translations 
 ## Settings
 FUScaBR's settings are based on JSON files. These files are located inside `fuscabr/conf` folder and control the library in general as well as specific behaviors of the modules. You can get more information at [FUScaBR Wiki](https://github.com/celsou/fuscabr/wiki/FUScaBR-settings).
 
-## Buy me a coffee
-Is FUScaBR being useful to you? You can show your appreciation through a donation. We are currently accepting donations only through Pix (Brazilian payment system). The data are as follows:
-
-Random key (chave aleatória) Pix: `848c0870-ec5a-488c-95eb-97e3e3c8e029`
-
-Thank you!
-
 ## License
 FUScaBR is distributed under the MIT license.
