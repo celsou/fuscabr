@@ -1,10 +1,20 @@
 /******************************************
- * FUScaBR - "Funções úteis para o ScadaBR"
+ * FBR - "Funções úteis para o ScadaBR"
  * License: MIT
  ******************************************/
 "use strict";
 
 fuscabr.csnippet = {
+    callbackFunctions: [],
+    
+    runCallbacks: function() {
+        for (var i of fuscabr.csnippet.callbackFunctions) {
+            if (typeof i == "function") {
+                i();
+            }
+        }
+    },
+
     loadHtmlTemplate: function() {
 		var conf = fuscabr.csnippet.conf;
         var select = document.getElementById("fuscabr-csnippet-html-select");
@@ -18,14 +28,17 @@ fuscabr.csnippet = {
 			textarea.value = response;
 			textarea.dispatchEvent(changeEvent);
 			select.disabled = false;
+            fuscabr.csnippet.runCallbacks();
 		}, conf.templatesLoadTimeout, function() {
 			textarea.value = "<!-- Connection Timeout, please try again -->";
 			textarea.dispatchEvent(changeEvent);
 			select.disabled = false;
+            fuscabr.csnippet.runCallbacks();
 		}, function() {
 			textarea.value = "<!-- Error! Template file not found. -->";
 			textarea.dispatchEvent(changeEvent);
 			select.disabled = false;
+            fuscabr.csnippet.runCallbacks();
 		});
     },
 
@@ -42,14 +55,17 @@ fuscabr.csnippet = {
 			textarea.value = response;
 			textarea.dispatchEvent(changeEvent);
 			select.disabled = false;
+            fuscabr.csnippet.runCallbacks();
 		}, conf.templatesLoadTimeout, function() {
 			textarea.value = "/* Connection Timeout, please try again */";
 			textarea.dispatchEvent(changeEvent);
 			select.disabled = false;
+            fuscabr.csnippet.runCallbacks();
 		}, function() {
 			textarea.value = "/* Error! Template file not found. */";
 			textarea.dispatchEvent(changeEvent);
 			select.disabled = false;
+            fuscabr.csnippet.runCallbacks();
 		});
     },
     

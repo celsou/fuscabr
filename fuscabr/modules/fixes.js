@@ -1,5 +1,5 @@
 /******************************************
- * FUScaBR - "Funções úteis para o ScadaBR"
+ * FBR - "Funções úteis para o ScadaBR"
  * License: MIT
  ******************************************/
  "use strict";

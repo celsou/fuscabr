@@ -25,9 +25,12 @@ var descriptions = [ 'Series 1' ];
 var height = 300;
 var width = 400;
 
+// Customize background color for chart area
+var chart_background_color = "rgba(255, 255 , 255 , 0.0)";
+
 // Configure chart title
 var show_title = true;
-var title = 'My FUScaBR Chart';
+var title = 'My FBR Chart';
 
 // Define chart type:
 // 0 -> Line chart
@@ -41,7 +44,12 @@ var begin_Y_at_zero = true;
 // Enable chart animations
 var enable_animations = true;
 
-
+// Custom options for Chart.js
+// Please read the documentation at https://www.chartjs.org/docs/2.9.4/
+// before use this
+var custom_options = {
+	maintainAspectRatio: false
+};
 
 
 //
@@ -56,7 +64,7 @@ var invalid_html = "";
 
 // Get datapoint identifiers (ID/XID)
 function getDataPointIds(identifier) {
-    var dpDAO = new com.serotonin.mango.db.dao.DataPointDao();
+    var dpDAO = include(org.scada_lts.mango.service.DataPointService, com.serotonin.mango.db.dao.DataPointDao);
     var dp = dpDAO.getDataPoint(identifier);
 
     var point_id = dp.getId();
@@ -75,7 +83,7 @@ function getDataPointType(identifier) {
 		5: "IMAGE"
 	}
 
-	var dpDAO = new com.serotonin.mango.db.dao.DataPointDao();
+	var dpDAO = include(org.scada_lts.mango.service.DataPointService, com.serotonin.mango.db.dao.DataPointDao);
     var dp = dpDAO.getDataPoint(identifier);
 	var locator = dp.getPointLocator();
 	return types[locator.getDataTypeId()];
@@ -83,7 +91,7 @@ function getDataPointType(identifier) {
 
 // Get data points' latest "n" values
 function readPoints(id) {
-	var val = new com.serotonin.mango.db.dao.PointValueDao();
+	var val = include(org.scada_lts.mango.service.PointValueService, com.serotonin.mango.db.dao.PointValueDao);
 	return val.getLatestPointValues(id, reading_number);
 }
 
@@ -160,7 +168,7 @@ function createJSONDatasets() {
 
 
 // Create a JSON string that can be interpreted
-// by FUScaBR library
+// by FBR library
 function createFinalJSON() {
 	var types = ['line', 'bar', 'horizontalBar'];
 	var index = (graphic_type > 2) ? 0 : graphic_type;
@@ -168,13 +176,15 @@ function createFinalJSON() {
 	var foo = '';
 	
 	foo +=	'{';
-	// Specific FUScaBR options
+	// Specific FBR options
 	foo +=		'"height":"' + height + '",';
 	foo +=		'"width":"' + width + '",';
+	foo +=		'"chartBackgroundColor":"' + chart_background_color + '",';
 	foo +=		'"beginAtZero":' + begin_Y_at_zero + ',';
 	foo +=		'"timeBased":false,';
 	foo +=		'"animations":' + enable_animations + ',';
 	foo +=		'"showTitle":' + show_title + ',';
+	foo +=		'"customOptions":' + jsonString(custom_options) + ',';
 	foo +=		'"title":"' + title + '",';
 	// Chart.js options
 	foo +=		'"type":"' + types[index] + '",';
@@ -185,6 +195,24 @@ function createFinalJSON() {
 	foo +=	'}';
 	
 	return foo;
+}
+
+// Alternative to JSON.stringify() in older ScadaBR versions (1.0, 1.1)
+function jsonString(obj) {
+	if (!!JSON) {
+		return JSON.stringify(obj);
+	} else {
+		return String(org.json.JSONObject(obj).toString());
+	}
+}
+
+// Include Java classes conditionally (Scada-LTS compatibility feature)
+function include(defaultClass, alternativeClass) {
+    try {
+        return defaultClass();
+    } catch (e) {
+        return alternativeClass();
+    }
 }
 
 var s = "<input class='fuscabr-chart-data' type='hidden' value='" + createFinalJSON() + "' >";

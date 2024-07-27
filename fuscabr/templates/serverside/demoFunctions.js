@@ -21,7 +21,7 @@ function getDataPointType(identifier) {
 		5: "IMAGE"
 	}
 
-	var dpDAO = new com.serotonin.mango.db.dao.DataPointDao();
+	var dpDAO = include(org.scada_lts.mango.service.DataPointService, com.serotonin.mango.db.dao.DataPointDao);
     var dp = dpDAO.getDataPoint(identifier);
 	var locator = dp.getPointLocator();
 	return types[locator.getDataTypeId()];
@@ -35,7 +35,7 @@ function getDataPointType(identifier) {
 // To run it you must have write permission for the Graphical
 // View.
 function setPoint(pointIdentifier, value) {
-    var dpDAO = new com.serotonin.mango.db.dao.DataPointDao();
+    var dpDAO = include(org.scada_lts.mango.service.DataPointService, com.serotonin.mango.db.dao.DataPointDao);
     var pointId = dpDAO.getDataPoint(pointIdentifier).getId();
     return "mango.view.setPoint(" + pointId + "," + pointComponent.id + "," + value + ");";
 }
@@ -47,7 +47,7 @@ function setPoint(pointIdentifier, value) {
 // CAUTION! Incorrect uses can lead to infinite writing
 // loops. Use this function only if you really need.
 function backgroundSetPoint(pointId, newValue) {
-    var pvDAO = new com.serotonin.mango.db.dao.PointValueDao();
+    var pvDAO = include(org.scada_lts.mango.service.PointValueService, com.serotonin.mango.db.dao.PointValueDao);
     var lastValue = pvDAO.getLatestPointValue(pointId).value;
 
     if (typeof newValue == "string")
@@ -92,7 +92,7 @@ function getUserInfo() {
 // This function returns an object with useful data point
 // informations (id, xid, point name and data source name)
 function getDataPointInfo(identifier) {
-    var dpDAO = new com.serotonin.mango.db.dao.DataPointDao();
+    var dpDAO = include(org.scada_lts.mango.service.DataPointService, com.serotonin.mango.db.dao.DataPointDao);
     var dp = dpDAO.getDataPoint(identifier);
 
     var pointId = dp.getId();
@@ -107,7 +107,16 @@ function getDataPointInfo(identifier) {
 // that returns only the data point ID (useful to get an ID
 // from a XID)
 function getDataPointId(identifier) {
-    var dpDAO = new com.serotonin.mango.db.dao.DataPointDao();
+    var dpDAO = include(org.scada_lts.mango.service.DataPointService, com.serotonin.mango.db.dao.DataPointDao);
     var dp = dpDAO.getDataPoint(identifier);
     return dp.getId();
+}
+
+// Include Java classes conditionally (Scada-LTS compatibility feature)
+function include(defaultClass, alternativeClass) {
+    try {
+        return defaultClass();
+    } catch (e) {
+        return alternativeClass();
+    }
 }

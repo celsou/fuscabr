@@ -73,7 +73,7 @@ function createFinalCSV() {
 
 // Create CSV history for each data point specified
 function createCSVHistory(point, startTime) {
-	var pvDAO = new com.serotonin.mango.db.dao.PointValueDao();
+	var pvDAO = include(org.scada_lts.mango.service.PointValueService, com.serotonin.mango.db.dao.PointValueDao);
 	var history = pvDAO.getPointValues(point.id, startTime);
 	var sdf = new java.text.SimpleDateFormat(time_pattern);
 
@@ -90,7 +90,7 @@ function createCSVHistory(point, startTime) {
 
 // Get data point information (id, xid, point name and data source name)
 function getDataPointInfo(identifier) {
-    var dpDAO = new com.serotonin.mango.db.dao.DataPointDao();
+    var dpDAO = include(org.scada_lts.mango.service.DataPointService, com.serotonin.mango.db.dao.DataPointDao);
     var dp = dpDAO.getDataPoint(identifier);
 
     var pointId = dp.getId();
@@ -98,4 +98,13 @@ function getDataPointInfo(identifier) {
     var pointName = String(dp.getName());
     var sourceName = String(dp.getDataSourceName());
     return { id: pointId, xid: pointXid, name: pointName, source: sourceName };
+}
+
+// Include Java classes conditionally (Scada-LTS compatibility feature)
+function include(defaultClass, alternativeClass) {
+    try {
+        return defaultClass();
+    } catch (e) {
+        return alternativeClass();
+    }
 }

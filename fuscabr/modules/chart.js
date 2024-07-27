@@ -1,5 +1,5 @@
 /******************************************
- * FUScaBR - "Funções úteis para o ScadaBR"
+ * FBR - "Funções úteis para o ScadaBR"
  * License: MIT
  ******************************************/
  "use strict";
@@ -41,13 +41,15 @@ fuscabr.chart = {
 		var conf = formatedData[0];
 		var newCanvas = document.createElement("canvas");
 		var newDiv = document.createElement("div");
-		
+		conf.chartBackgroundColor = conf.chartBackgroundColor || "rgba(255,255,255,0.0)";
+
 		// Get time format options for time-based charts
 		var timeOptions = this.conf.timeOptions;
 		
 		// Add elements to the page structure
 		newCanvas.classList.add("fuscabr-chart-canvas");
-		newDiv.style = "position: relative; height: " + conf.height + "px; width: " + conf.width + "px;";
+		newDiv.style = `height: ${conf.height}px; width: ${conf.width}px; background-color: ${conf.chartBackgroundColor};`;
+		newDiv.style.position = "relative";
 		newDiv.appendChild(newCanvas);
 		container.appendChild(newDiv);
 		container.classList.add("fuscabr-chart-container");
@@ -61,6 +63,11 @@ fuscabr.chart = {
 		chart.options.elements.line.tension = 0;
 		chart.options.maintainAspectRatio = false;
 		
+		// Load custom options for Chart.js
+		for (var o in conf.customOptions) {
+			chart.options[o] = conf.customOptions[o];
+		}
+
 		// Adjust chart parameters
 		if (conf.beginAtZero == true) {
 			chart.options.scales.yAxes[0].ticks.beginAtZero = true;
@@ -98,6 +105,7 @@ fuscabr.chart = {
 		try {
 			formatedData = this.formatData(container.querySelector(".fuscabr-chart-data").value);
 			conf = formatedData[0];
+			conf.chartBackgroundColor = conf.chartBackgroundColor || "rgba(255,255,255,0.0)";
 		} catch {
 			fuscabr.chart.destroyChart(element);
 			return -1;
@@ -125,12 +133,18 @@ fuscabr.chart = {
 			return -1;
 		}
 		
-		// Update chart height/width
+		// Update chart height, width and background color
 		element.canvas.parentElement.style.height = conf.height + "px";
 		element.canvas.parentElement.style.width = conf.width + "px";
+		element.canvas.parentElement.style.backgroundColor = conf.chartBackgroundColor.replaceAll(";", "");
 		
+		// Update custom options
+		for (var o in conf.customOptions) {
+			element.options[o] = conf.customOptions[o];
+		}
+
 		// Update chart parameters
-		var changed = false;
+		var changed = false;		
 		var foo = element.options.scales.yAxes[0].ticks.beginAtZero;
 		if (foo != conf.beginAtZero) {
 			element.options.scales.yAxes[0].ticks.beginAtZero = conf.beginAtZero;

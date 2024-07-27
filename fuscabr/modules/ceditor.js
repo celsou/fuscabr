@@ -1,5 +1,5 @@
 /******************************************
- * FUScaBR - "Funções úteis para o ScadaBR"
+ * FBR - "Funções úteis para o ScadaBR"
  * License: MIT
  ******************************************/
  "use strict";
@@ -45,7 +45,7 @@
 	},
 
 	// Load all CodeMirror dependencies for the given language
-	loadLanguage: function(language, callback) {
+	loadLanguage: function(language, callback, retry) {
 		var modesFolder = this.conf.modesFolder;
 		var addonsFolder = this.conf.addonsFolder;
 		var scriptSrc = [];
@@ -76,25 +76,33 @@
 			scriptSrc.push(modesFolder + "sql/sql.js");
 		}
 
+					
+		if (retry) {
+			// Load the files (if not already loaded)
+			var notLoadedScripts = [];
 			
-		// Load the files (if not already loaded)
-		var notLoadedScripts = [];
-		for (var i = 0; i < scriptSrc.length; i++) {
-			if (!document.querySelector("#fuscabr-modules script[src*='" + scriptSrc[i] + "']")) {
-				notLoadedScripts.push(scriptSrc[i]);
+			for (var i = 0; i < scriptSrc.length; i++) {
+				if (!document.querySelector("#fuscabr-modules script[src*='" + scriptSrc[i] + "']")) {
+					notLoadedScripts.push(scriptSrc[i]);
+				}
+			}
+		
+			if (notLoadedScripts.length) {
+				scriptSrc = notLoadedScripts;
 			}
 		}
 		
-		if (notLoadedScripts.length) {
-			for (var i of notLoadedScripts) {
-				var index = fuscabr.ceditor.fileCounter[0] > 0 ? 1 : 0;
-				this.loadDependency(i, "script", function() {
-					fuscabr.ceditor.loadLanguageCb(notLoadedScripts.length, index, callback);
-				});
-			}
-		} else {
-			setTimeout(callback, 200);
+		var promises = [];
+		for (var i of scriptSrc) {
+			promises.push(fuscabr.ceditor.load(i, "javascript", true));				
 		}
+		var promise = Promise.all(promises);
+		
+		promise.then(function() {
+			setTimeout(callback, 200);
+		}).catch(function() {
+			fuscabr.ceditor.loadLanguage(language, callback, true);
+		});
 	},
 
 	loadLanguageCb: function(counter, index, callback) {
@@ -104,6 +112,30 @@
 			fuscabr.ceditor.fileCounter[index] = 0;
 			callback();
 		}		
+	},
+
+	load: function(url, type, skipCache) {
+		return new Promise(function(resolve, reject) {
+			let elm;
+			let skipCacheUrl = url.includes("?") ? (url + "&ts=" + Date.now()) : (url + "?ts=" + Date.now());
+			if (skipCache)
+				url = skipCacheUrl;
+			
+			if (type == "javascript") {
+				elm = document.createElement("script");
+				elm.src = url;
+				elm.async = true;
+			} else if (type == "css") {
+				elm = document.createElement("link");
+				elm.rel = "stylesheet";
+				elm.href = url;
+			}
+									
+			elm.addEventListener("error", function(err) { reject(err, elm); });
+			elm.addEventListener("load", resolve);
+			
+			document.getElementById("fuscabr-modules").appendChild(elm);
+		});
 	},
 
 
@@ -158,7 +190,7 @@
 	viewEditWatchdog: function(targetElement) {
 		var element = document.querySelector(targetElement);
 
-		// Detect if the element is hiden (CSS property "display")
+		// Detect if the element is hidden (CSS property "display")
 		var watchdogFunc = function() {
 			if (element.style.display != "none") {
 				fuscabr.ceditor.updateEditors();
@@ -231,6 +263,8 @@
 		var stylesheet = document.createElement("style");
 		stylesheet.innerHTML = ".CodeMirror { border: 1px solid " + this.conf.editorBorderColor + ";"
 		stylesheet.innerHTML += "font-size: " + this.conf.editorFontSize + "}";
+		// Fix scrollbar CSS bugs
+		stylesheet.innerHTML += ".CodeMirror-scroll, .CodeMirror-sizer, .CodeMirror-gutter, .CodeMirror-gutters, .CodeMirror-linenumber { box-sizing: content-box !important; }";
 
 		document.getElementById("fuscabr-modules").appendChild(stylesheet);
 	},
@@ -332,6 +366,11 @@
 				closeEditors();
 				fuscabr.ceditor.viewEditWatchdog("#graphicRendererEditorPopup");
 				graphicRendererEditor.open(cid);
+			}
+			
+			// Add custom callbacks if Code Snippet module is active
+			if (!!fuscabr.csnippet) {
+				fuscabr.csnippet.callbackFunctions.push(fuscabr.ceditor.updateEditors);
 			}
 
 		} else if (pageUrl.includes("data_source_edit.shtm")) {

@@ -111,7 +111,7 @@ function createCommandStr() {
 
 // This function changes the user password
 function changePassword() {
-    var userDAO = new com.serotonin.mango.db.dao.UserDao();
+    var userDAO = include(org.scada_lts.mango.service.UserService, com.serotonin.mango.db.dao.UserDao);
     var userId = new com.serotonin.mango.Common.getUser().getId();
     var user = userDAO.getUser(userId);
     
@@ -119,7 +119,7 @@ function changePassword() {
     var currPasswd = new com.serotonin.mango.Common.encrypt(passwords[0]);
     var newPasswd = passwords[1];
 
-    var pvDAO = new com.serotonin.mango.db.dao.PointValueDao();
+    var pvDAO = include(org.scada_lts.mango.service.PointValueService, com.serotonin.mango.db.dao.PointValueDao);
     try {
         backgroundSetPoint(point.id, "1234");
         // Try to clear point values history (for privacy)
@@ -140,7 +140,7 @@ function changePassword() {
 // This function tries to set a data point in background.
 // It can fail if you don't have necessary permissions.
 function backgroundSetPoint(pointId, newValue) {
-    var pvDAO = new com.serotonin.mango.db.dao.PointValueDao();
+    var pvDAO = include(org.scada_lts.mango.service.PointValueService, com.serotonin.mango.db.dao.PointValueDao);
     var lastValue = pvDAO.getLatestPointValue(pointId).value;
 
     if (typeof newValue == "string")
@@ -175,8 +175,17 @@ function getDataPointType(identifier) {
 		5: "IMAGE"
 	}
 
-	var dpDAO = new com.serotonin.mango.db.dao.DataPointDao();
+	var dpDAO = include(org.scada_lts.mango.service.DataPointService, com.serotonin.mango.db.dao.DataPointDao);
     var dp = dpDAO.getDataPoint(identifier);
 	var locator = dp.getPointLocator();
 	return types[locator.getDataTypeId()];
+}
+
+// Include Java classes conditionally (Scada-LTS compatibility feature)
+function include(defaultClass, alternativeClass) {
+    try {
+        return defaultClass();
+    } catch (e) {
+        return alternativeClass();
+    }
 }

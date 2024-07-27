@@ -21,7 +21,7 @@
 		"distribute_vertically": "Vertically (T)",
 		"elements_follow_anchor": "Elements follow anchor",
 		"move_with_arrows": "Move with keyboard arrows",
-		"fuscabr_library": "FUScaBR Library"
+		"fuscabr_library": "FBR Library"
 	},
 	
 	"csnippet": {
@@ -46,8 +46,8 @@
 		"customizable_data_point": "Customizable data point",
 		"demo_functions": "Demo functions",
 		"drop_down_selector": "Drop-down selector",
-		"fuscabr_chart_time": "FUScaBR Chart (time based)",
-		"fuscabr_chart_latest": "FUScaBR Chart (latest values)",
+		"fuscabr_chart_time": "FBR Chart (time based)",
+		"fuscabr_chart_latest": "FBR Chart (latest values)",
 		"gauge": "Gauge",
 		"history_csv": "Point values history download (CSV)",
 		"horizontal_bar": "Bar (horizontal)",
