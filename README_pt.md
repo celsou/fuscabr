@@ -1,4 +1,4 @@
-![FBR]()
+![FBR](https://raw.githubusercontent.com/celsou/fuscabr/master/fuscabr/templates/internal/fbr.png)
 
 
 ## O que é a FBR?
