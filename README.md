@@ -21,15 +21,15 @@ FBR 2.1+ has installers for Windows and Linux. Get them from the [downloads page
 Also check the [installation instructions](https://github.com/celsou/fuscabr/wiki/Installation).
 
 ## Internationalization
-FBR has support for internationalization. Currently, there are translations in Portuguese, English and Spanish. You can check how to change the FBR language (or create new translations) at [FBR Wiki](https://github.com/celsou/fuscabr/wiki/FUScaBR-localization). Collaborators to translate FBR into other languages are welcome.
+FBR has support for internationalization. Currently, there are translations in Portuguese, English and Spanish. You can check how to change the FBR language (or create new translations) at [FBR Wiki](https://github.com/celsou/fuscabr/wiki/FBR-localization). Collaborators to translate FBR into other languages are welcome.
 
 ## Settings
-FBR's settings are based on JSON files. These files are located inside `fuscabr/conf` folder and control the library in general as well as specific behaviors of the modules. You can get more information at [FBR Wiki](https://github.com/celsou/fuscabr/wiki/FUScaBR-settings).
+FBR's settings are based on JSON files. These files are located inside `fuscabr/conf` folder and control the library in general as well as specific behaviors of the modules. You can get more information at [FBR Wiki](https://github.com/celsou/fuscabr/wiki/FBR-settings).
 
 ## Support for Scada-LTS
 Current versions of FBR were not built with Scada-LTS compatibility in mind. FBR version 2.1.1 brings changes to the script templates to _start_ an official support process for Scada-LTS. Future versions (3.x) will bring better support for Scada-LTS.
 
-The Scada-LTS team is working on integrating FBR version 2.0 into Scada-LTS [link](https://github.com/SCADA-LTS/Scada-LTS/releases/tag/v2.7.8). This effort is not related to me directly, so if you find any bugs related to the FBR version pre-installed in Scada-LTS, don't forget to report them to the Scada-LTS team as well.
+The Scada-LTS team is working on [integrating FBR version 2.0 into Scada-LTS](https://github.com/SCADA-LTS/Scada-LTS/releases/tag/v2.7.8). This effort is not related to me directly, so if you find any bugs related to the FBR version pre-installed in Scada-LTS, don't forget to report them to the Scada-LTS team as well.
 
 ## License
 FBR is distributed under the MIT license.
