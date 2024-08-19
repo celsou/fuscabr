@@ -1,6 +1,6 @@
 /******************************************
  * FBR - Funções úteis para o ScadaBR
- * Licença: MIT
+ * License: MIT
  ******************************************/
 "use strict";
 

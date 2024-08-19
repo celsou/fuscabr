@@ -199,9 +199,9 @@ function createFinalJSON() {
 
 // Alternative to JSON.stringify() in older ScadaBR versions (1.0, 1.1)
 function jsonString(obj) {
-	if (!!JSON) {
+	try {
 		return JSON.stringify(obj);
-	} else {
+	} catch (e) {
 		return String(org.json.JSONObject(obj).toString());
 	}
 }

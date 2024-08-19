@@ -2,7 +2,7 @@
 		"language": "en",
 		"languageFile": "resources/fuscabr/conf/i18n/en.json",
 		
-		"modulesPath": "resources/fuscabr/modules/",
+		"modulesPath": "resources/fuscabr/modules/minified/",
 		"modules": [
 			{
 				"name": "align",
