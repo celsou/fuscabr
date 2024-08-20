@@ -252,7 +252,7 @@ fuscabr.align = {
 		document.getElementById("fuscabr-align-x-anchor").value = pos.x;
 		document.getElementById("fuscabr-align-y-anchor").value = pos.y;
 
-		updateViewComponentLocation(fuscabr.align.selectedItems[0].id);
+		fuscabr.align.updateComponentPosition(fuscabr.align.selectedItems[0].id);
 
 		if (fuscabr.align.elementsFollowAnchor) {
 			fuscabr.align.followAnchor();
@@ -349,7 +349,7 @@ fuscabr.align = {
 			elements[i].style.left = (currentX + xOffset) + "px";
 			elements[i].style.top =  (currentY + yOffset) + "px";
 
-			updateViewComponentLocation(elements[i].id);
+			fuscabr.align.updateComponentPosition(elements[i].id);
 		}
 
 	},
@@ -392,7 +392,7 @@ fuscabr.align = {
 		// Copy the anchor position
 		for (var i of this.selectedItems) {
 			i.style.left = x;
-			updateViewComponentLocation(i.id);
+			fuscabr.align.updateComponentPosition(i.id);
 		}
 	},
 
@@ -403,7 +403,7 @@ fuscabr.align = {
 		// Copy the anchor position
 		for (var i of this.selectedItems) {
 			i.style.top = y;
-			updateViewComponentLocation(i.id);
+			fuscabr.align.updateComponentPosition(i.id);
 		}
 	},
 
@@ -422,7 +422,7 @@ fuscabr.align = {
 			
 			var newX = loopXLeft + (xRight - loopXRight);
 			i.style.left = Math.round(newX) + "px";
-			updateViewComponentLocation(i.id);
+			fuscabr.align.updateComponentPosition(i.id);
 		}
 	},
 
@@ -441,7 +441,7 @@ fuscabr.align = {
 			
 			var newY = loopYTop + (yBottom - loopYBottom);
 			i.style.top = Math.round(newY) + "px";
-			updateViewComponentLocation(i.id);
+			fuscabr.align.updateComponentPosition(i.id);
 		}
 	},
 
@@ -460,7 +460,7 @@ fuscabr.align = {
 			
 			var newX = loopXLeft + (xCenter- loopXCenter);
 			i.style.left = Math.round(newX) + "px";
-			updateViewComponentLocation(i.id);
+			fuscabr.align.updateComponentPosition(i.id);
 		}
 	},
 
@@ -479,7 +479,7 @@ fuscabr.align = {
 			
 			var newY = loopYTop + (yCenter - loopYCenter);
 			i.style.top = Math.round(newY) + "px";
-			updateViewComponentLocation(i.id);
+			fuscabr.align.updateComponentPosition(i.id);
 		}
 	},
 
@@ -523,7 +523,7 @@ fuscabr.align = {
 			
 			var newX = pastX + pastWidth + space;
 			copyArray[i].style.left = Math.round(newX) + "px";
-			updateViewComponentLocation(copyArray[i].id);
+			fuscabr.align.updateComponentPosition(copyArray[i].id);
 			
 			// Update anchor position
 			this.updateAnchorPosition();
@@ -577,7 +577,7 @@ fuscabr.align = {
 			
 			var newY = pastY + pastHeight + space;
 			copyArray[i].style.top = Math.round(newY) + "px";
-			updateViewComponentLocation(copyArray[i].id);
+			fuscabr.align.updateComponentPosition(copyArray[i].id);
 			
 			// Update anchor position
 			this.updateAnchorPosition();
@@ -590,6 +590,21 @@ fuscabr.align = {
 		}
 	},
 
+	// Update components' position, preventing negative coordinates
+	updateComponentPosition: function(componentId) {
+		var component = document.getElementById(componentId);
+		var compPos = {
+			top: parseInt(component.style.top.replace("px", "")),
+			left: parseInt(component.style.left.replace("px", ""))
+		};
+		if (isNaN(compPos.top) || compPos.top < 0) {
+			component.style.top = "0px";
+		}
+		if (isNaN(compPos.left) || compPos.left < 0) {
+			component.style.left = "0px";
+		}
+		updateViewComponentLocation(componentId);
+	},
 
 	/**
 	 *	Main methods
